@@ -46,9 +46,9 @@ The result on my PC is the following:
     win=ui.MainWin("wdMain", "Welcome to abtgeom","""
         l1"Hello"    enTry-10    bt1"Click me"
         """)
+    
     def clicked():
         win.child("l1").widget.settext("Button was clicked !")
-    
     win.btbind("bt1", clicked)
     
     ui.mainloop()
