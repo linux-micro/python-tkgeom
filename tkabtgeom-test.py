@@ -1,5 +1,4 @@
 # get current virtual row -> win.rownum
-# QQ se riga con notebook cresce, fa casino; se più righe crescono, casino
 # have ":" refer to virtual row container
 # have a mean to create a frame and describe it
 # same for notebooks, have a mean to describe its pages
