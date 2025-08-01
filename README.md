@@ -38,7 +38,7 @@ The result on my PC is the following:
 
 ![output of traditional tkinter](/doc-assets/example1-result.png)
 
-## Now see the same thing using this library:
+**Now see the same thing using this library:**
 
     import tkabtgeom as UI
     
@@ -90,4 +90,9 @@ The above *window description* generates the following (and imagine how much typ
 Will be prepared. For now, some explanation is in the source files:
 - tkabtgeom.py is the library, but it contains also a main for interactive mode
 - tkabtgeom-test.py is an example program that imports the library. It is crowded with used and commented-out code, but shows quite a few things.
+
+## See also
+[FreeSimpleGUI](https://github.com/spyoungtech/FreeSimpleGUI) has similar aims, is much more complete and powerful, of course with the cost of more complexity.
+
+
 
