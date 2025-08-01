@@ -12,11 +12,6 @@ import tkinter as tk
 
 import sys, os
 
-fulpath = os.path.abspath(sys.argv[0])
-if fulpath[0] == 'C':
-    print("inc:", sys.argv[0])
-    sys.path.append("c:/dati/python apps/mylib")
-
 import tkabtgeom as UI
 
 
