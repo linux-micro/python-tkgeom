@@ -9,8 +9,6 @@
 #   a function to create external widgets; for example, associate "cv" to
 #   function that creates a Canvas; the library will insert that
 # labels which change length in runtime should be managed better
-# text for Entry (enXXX) in description don't work
-# width for many widgets (namely Button and others) in description don't work
 # could use getter like ##    def __getitem__(self, name):
 
 
@@ -60,7 +58,7 @@ import sys
 dbgopts = ""        # specify name of widget(s) to be logged while doing layout
                     # =name, <name (starts with), .name (contains), * (all)
 
-VERSION = "0.7"
+VERSION = "0.71"
 
 class abtwidget:
     x = 0
@@ -389,9 +387,9 @@ class abtwin:
                 # create widget
                 # print(f"dsc: op1={opt1}, name={name}, txt={text}, w={width}, op2={opt2}")
                 if name in self.children: print(f"Name {name} already present")
-                if name.startswith("l"):  wdg = self.Label(name, text)
+                if name.startswith("l"):  wdg = self.Label(name, text, width)
                 if name.startswith("bt"):
-                    wdg = self.Button(name, text)
+                    wdg = self.Button(name, text, width=width)
 ##                    hand = name+"_click"
 ##                    import inspect
 ##                    cnt = 3
@@ -404,14 +402,14 @@ class abtwin:
 ##                            wdg.widget.configure(command=loc[name+"_click"])
 ##                        break
 
-                if name.startswith("ck"): wdg = self.Checkbutton(name, text)
+                if name.startswith("ck"): wdg = self.Checkbutton(name, text, width)
                 if name.startswith("en"): wdg = self.Entry(name, text, width)
                 if name.startswith("ex"): wdg = self.Exframe(name)
                 if name.startswith("er"): wdg = self.Exframe(name, relief="ridge")
                 if name.startswith("sg"): wdg = self.Stringgrid(name, [])
                 if name.startswith("nb"): wdg = self.Notebook(name, [])
-                if name.startswith("ml"): wdg = self.MultiLine(name, [])
-                if name.startswith("cb"): wdg = self.Combobox(name, [])
+                if name.startswith("ml"): wdg = self.MultiLine(name, text, width)
+                if name.startswith("cb"): wdg = self.Combobox(name, [], width)
                 if name.startswith("sp"): wdg = self.Space(name, width)
 
                 # manage "|" mark (normally "LR"+self.last.name+"+8")
@@ -526,24 +524,24 @@ class abtwin:
         wg.oh = wg.h = self.marg // 4+1
         return wg
 
-    def Label(self, name, text, xg='', yg=''):
+    def Label(self, name, text, width=0, xg='', yg=''):
         name = self.prename("l", name)
-        win = tk.Label(self.widget, text=text)
+        win = tk.Label(self.widget, text=text, width=width, anchor="w")
         # print(text, ": ", win.winfo_reqwidth(), "x", win.winfo_reqheight())
         wg = self.prewidget(name, win)
         if xg != '': wg.xg = xg
         if yg != '': wg.yg = yg
         return wg
 
-    def Button(self, name, text, command=None):
+    def Button(self, name, text, command=None, width=0):
         name = self.prename("bt", name)
-        win = tk.Button(self.widget, text=text, command=command, takefocus=0)
+        win = tk.Button(self.widget, text=text, width=width, command=command, takefocus=0)
         wg = self.prewidget(name, win)
         return wg
 
-    def Checkbutton(self, name, text):
+    def Checkbutton(self, name, text, width):
         name = self.prename("ck", name)
-        win = tk.Checkbutton(self.widget, text=text)
+        win = tk.Checkbutton(self.widget, text=text, width=width, anchor="w")
         wg = self.prewidget(name, win)
         return wg
 
@@ -553,7 +551,8 @@ class abtwin:
         efont = self.fontname
         if fontname: efont = fontname
         if fontsize == 0:     fontsize = self.fontsize
-        win = tk.Entry(self.widget, text=text, width=width, font=efont+" "+str(fontsize))
+        win = tk.Entry(self.widget, width=width, font=efont+" "+str(fontsize))
+        win.settext(text)
         wg = self.prewidget(name, win)
         return wg
 
@@ -565,6 +564,7 @@ class abtwin:
         if fontname: efont = fontname
         if fontsize == 0:     fontsize = self.fontsize
         win = tk.Text(self.widget, width=width, height=height, font=efont+" "+str(fontsize))
+        win.settext(text)
 ##        win = tk.Text(self.widget, width=width, height=height)
 ##        win.configure(font=(efont, fontsize, ""))
         wg = self.prewidget(name, win)
@@ -657,10 +657,10 @@ class abtwin:
         self.NotebookConfigure(name, apages)
         return wg
 
-    def Combobox(self, name, items, kind='readonly'):
-        """Returns a list containing the notebook itself and the pages inside"""
+    def Combobox(self, name, items, width, kind='readonly'):
         name = self.prename("cb", name)
-        nb = ttk.Combobox(self.widget) # readonly/normal
+        if width: nb = ttk.Combobox(self.widget, width=width) # readonly/normal
+        else: nb = ttk.Combobox(self.widget) # readonly/normal
         nb['state'] = kind
         nb['values'] = items
         wg = self.prewidget(name, nb)
